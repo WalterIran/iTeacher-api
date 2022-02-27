@@ -9,8 +9,8 @@ function logErrors (err, req, res, next) {
 //Middleware to send errors to client
 function errorHandler(err, req, res, next) {
   res.status(500).json({
-    message: err.message,
-    stack: err.stack,
+    status: 'failed',
+    msg: 'Internal Server Error'
   });
 }
 
@@ -20,6 +20,7 @@ function boomErrorHandler(err, req, res, next) {
 
     const { output } = err;
     res.status(output.statusCode).json(output.payload);
+    return;
   }
   next(err);
 }

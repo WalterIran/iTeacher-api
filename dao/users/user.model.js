@@ -6,7 +6,7 @@ class User extends Model {
         super('Users');
     }
 
-    async findById(email) {
+    async findByEmail(email) {
         const filter = {
             email
         }

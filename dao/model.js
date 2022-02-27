@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const { getDb } = require('../config/mongodb');
-const bcrypt = require('bcrypt');
 let db = null;
 
 class Model {
@@ -19,10 +18,6 @@ class Model {
 
     //Add new document
     async new(data) {
-        if(data.password) {
-            data.password = await this.hashPassword(data.password);
-        }
-
         return await this.collection.insertOne(data);
     }
 
@@ -75,14 +70,6 @@ class Model {
     async deleteOne(id) {
         const filter = {_id: new ObjectId(id)};
         return await this.collection.deleteOne(filter);
-    }
-
-    async hashPassword(rawPassword) {
-        return await bcrypt.hash(rawPassword, 10);
-    }
-  
-    async comparePassword(rawPassword, dbPassword) {
-      return await bcrypt.compare(rawPassword, dbPassword);
     }
 }
 
