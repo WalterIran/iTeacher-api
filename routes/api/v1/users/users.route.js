@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { jwtMiddleware } = require('../../../../config/jwt.strategy');
 
 const User = require('../../../../dao/users/user.model');
 const userModel = new User();
@@ -35,20 +36,22 @@ router.post('/create', async (req, res) => {
 });
 
 //Update one user
-router.patch('/update/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const changes = req.body;
-        const result = await userModel.updateOne(id, changes);
+router.patch('/update/:id', 
+    jwtMiddleware,
+    async (req, res, next) => {
+        try {
+            const id = req.params.id;
+            const changes = req.body;
+            const result = await userModel.updateOne(id, changes);
 
-        res.status(200).json({
-            status: 'success',
-            result
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({status: 'failed', msg: 'Internal Server Error'});
+            res.status(200).json({
+                status: 'success',
+                result
+            });
+        } catch (error) {
+            next(error);
+        }
     }
-});
+);
 
 module.exports = router;

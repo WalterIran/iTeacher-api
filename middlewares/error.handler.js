@@ -12,6 +12,7 @@ function errorHandler(err, req, res, next) {
     status: 'failed',
     msg: 'Internal Server Error'
   });
+  return;
 }
 
 //Middleware to handle boom errors

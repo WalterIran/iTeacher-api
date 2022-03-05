@@ -6,6 +6,17 @@ class User extends Model {
         super('Users');
     }
 
+    async addCourseToUser(userId, courseId) {
+        const updateCmd = {
+            "$addToSet" : {
+                courses: new ObjectId(courseId)
+            },
+        }
+
+        const filter = {_id: new ObjectId(userId)};
+        return await this.collection.updateOne(filter, updateCmd);
+    }
+
     async findByEmail(email) {
         const filter = {
             email
@@ -20,7 +31,7 @@ class User extends Model {
             _id
         };
         const doc = await this.collection.findOne(filter);
-        delete doc.password;
+        delete doc?.password;
         return doc;
     }
 }
