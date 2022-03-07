@@ -53,6 +53,43 @@ router.post('/teacher-signup',
     }
 );
 
+router.post('/login',
+    validatorHandler(loginSchema, 'body'),
+    async (req, res , next) => {
+        try {
+            const {email, password} = req.body;
+
+            const user = await userModel.findByEmail(email);
+
+            if (!user) {
+                boom.unauthorized();
+            }
+
+            const isMatch = await comparePassword(password, user.password);
+
+            if (!isMatch) {
+                boom.unauthorized();
+            }
+
+            const payload = {
+                userId: user._id,
+                userType: user.userType,
+                email
+            }
+
+            const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '10d'});
+
+            res.status(200).json({
+                payload,
+                accessToken
+            });
+
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 
 
 module.exports = router;
