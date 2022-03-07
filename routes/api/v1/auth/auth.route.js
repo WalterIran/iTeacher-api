@@ -36,7 +36,7 @@ router.post('/teacher-signup',
 
             const payload = {
                 userId: result.insertedId,
-                userType: 'student',
+                userType: 'teacher',
                 email: data.email
             }
 
