@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
 
-
 const indexRouter = require('./routes/index');
 
 const app = express();
@@ -19,7 +18,6 @@ app.use('/', indexRouter);
 
 //Error handling middlewares
 app.use(logErrors);
-app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
