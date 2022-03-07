@@ -40,8 +40,42 @@ router.post('/teacher-signup',
                 email: data.email
             }
 
-            const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '10d'});
-            
+            const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10d' });
+
+            res.status(200).json({
+                status: 'success',
+                result,
+                accessToken
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+router.post('/student-signup',
+    validatorHandler(studentSignUpSchema, 'body'),
+    async (req, res, next) => {
+        try {
+            const data = req.body;
+
+            const insertData = {
+                username: data.name + ' ' + data.surname,
+                userType: 'student',
+                email: data.email,
+                password: await hashPassword(data.password)
+            }
+
+            const result = await userModel.new(insertData);
+
+            const payload = {
+                userId: result.insertedId,
+                userType: 'student',
+                email: data.email
+            }
+
+            const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10d' });
+
             res.status(200).json({
                 status: 'success',
                 result,
@@ -55,9 +89,9 @@ router.post('/teacher-signup',
 
 router.post('/login',
     validatorHandler(loginSchema, 'body'),
-    async (req, res , next) => {
+    async (req, res, next) => {
         try {
-            const {email, password} = req.body;
+            const { email, password } = req.body;
 
             const user = await userModel.findByEmail(email);
 
@@ -77,7 +111,7 @@ router.post('/login',
                 email
             }
 
-            const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '10d'});
+            const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10d' });
 
             res.status(200).json({
                 payload,
