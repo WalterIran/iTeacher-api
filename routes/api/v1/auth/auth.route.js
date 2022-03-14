@@ -96,13 +96,13 @@ router.post('/login',
             const user = await userModel.findByEmail(email);
 
             if (!user) {
-                boom.unauthorized();
+                throw boom.unauthorized();
             }
 
             const isMatch = await comparePassword(password, user.password);
-
+            
             if (!isMatch) {
-                boom.unauthorized();
+                throw boom.unauthorized();
             }
 
             const payload = {

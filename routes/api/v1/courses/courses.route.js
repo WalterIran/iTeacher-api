@@ -10,6 +10,7 @@ const validatorHandler = require('../../../../middlewares/validator.handler');
 const { createCourseSchema, reviewCourseSchema, requiredIdCourseSchema, searchSchema, paginationSchema } = require('../../../../schemas/course.schema');
 
 router.post('/create',
+    jwtMiddleware,
     validatorHandler(createCourseSchema, 'body'),
     async (req, res, next) => {
         try {
