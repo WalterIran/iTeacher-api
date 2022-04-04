@@ -5,12 +5,29 @@ const logger = require('morgan');
 const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
 const {passport} = require('./config/jwt.strategy');
 
+var cors = require('cors');
+
+var whitelist = (process.env.CORS_ORIGIN||'').split(',');
+console.log("WhiteList:", whitelist);
+var corsOptions = {
+    origin: (origin,callback)=>{
+        console.log('Origin Value:',origin);
+        if(whitelist.indexOf(origin) >=0){
+            callback(null,true);
+        }else{
+            callback(new Error('CORS not allowed'));
+        }
+    }
+}
+
+
 const indexRouter = require('./routes/index');
 
 const app = express();
 app.use(passport.initialize());
 
 app.use(logger('dev'));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
