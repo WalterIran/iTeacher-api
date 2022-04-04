@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const boom = require('@hapi/boom');
+const multer = require('multer');
+
+const upload = multer();
 
 //Validation
 const validatorHandler = require('../../../../middlewares/validator.handler');
@@ -11,17 +14,24 @@ const User = require('../../../../dao/users/user.model');
 const userModel = new User();
 
 //Utils
+const { uploadFile } = require('../../../../config/s3');
 const { hashPassword, comparePassword } = require('../../../../utils/encryption.utils');
 
 router.post('/teacher-signup',
     validatorHandler(teacherSignUpSchema, 'body'),
+    upload.single('profileImg'),
     async (req, res, next) => {
         try {
             const data = req.body;
+            const profileImg = req.file;
+
+            const img = await uploadFile(profileImg);
+
             const insertData = {
                 username: data.name + ' ' + data.surname,
                 teacherType: data?.teacherType,
                 userType: 'teacher',
+                profileImg: img.Location,
                 about: {
                     degreeName: data?.degreeName,
                     description: data?.aboutDescription,
