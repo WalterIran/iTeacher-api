@@ -19,7 +19,6 @@ router.post('/create',
                 userId: data.userId,
                 courseName: data.courseName,
                 courseDescription: data.courseDescription,
-                courseTags: [...data.courseTags],
                 courseStatus: 'ACT',
                 reviews: [],
                 createdAt: new Date()

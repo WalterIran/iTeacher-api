@@ -122,9 +122,10 @@ router.post('/login',
             }
 
             const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10d' });
+            delete user.password;
 
             res.status(200).json({
-                payload,
+                user,
                 accessToken
             });
 

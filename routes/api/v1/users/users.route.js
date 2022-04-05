@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { jwtMiddleware } = require('../../../../config/jwt.strategy');
 
 const User = require('../../../../dao/users/user.model');
+const { hashPassword } = require('../../../../utils/encryption.utils');
 const userModel = new User();
 
 //Find One user
@@ -42,6 +43,9 @@ router.patch('/update/:id',
         try {
             const id = req.params.id;
             const changes = req.body;
+            if(changes.password){
+                changes.password =await hashPassword(changes.password)
+            }
             const result = await userModel.updateOne(id, changes);
 
             res.status(200).json({

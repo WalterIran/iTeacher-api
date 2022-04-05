@@ -10,6 +10,7 @@ class Course extends Model {
 
     //Add new document
     async new(data) {
+      data.userId = new ObjectId(data.userId);
       const course = await this.collection.insertOne(data);
       const user = await userModel.addCourseToUser(data.userId,course._id);
       return {user, course};
@@ -89,6 +90,10 @@ class Course extends Model {
         }, {
           '$project': {
             'review': 0
+          }
+        }, {
+          '$sort' : {
+            'createdAt': -1
           }
         }
       ];
