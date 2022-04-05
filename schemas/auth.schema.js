@@ -10,8 +10,8 @@ const confirmPassword = Joi.valid(Joi.ref('password'));
 const degreeName = Joi.string();
 const aboutDescription = Joi.string();
 const teacherType = Joi.string();
-const institutions = Joi.array().items(Joi.string());
-const platforms = Joi.array().items(Joi.string());
+const institutions = Joi.string();
+const platforms = Joi.string();
 
 const teacherSignUpSchema = Joi.object({
     name: name.required(),

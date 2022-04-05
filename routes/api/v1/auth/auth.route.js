@@ -18,8 +18,8 @@ const { uploadFile } = require('../../../../config/s3');
 const { hashPassword, comparePassword } = require('../../../../utils/encryption.utils');
 
 router.post('/teacher-signup',
-    validatorHandler(teacherSignUpSchema, 'body'),
     upload.single('profileImg'),
+    validatorHandler(teacherSignUpSchema, 'body'),
     async (req, res, next) => {
         try {
             const data = req.body;
@@ -35,8 +35,8 @@ router.post('/teacher-signup',
                 about: {
                     degreeName: data?.degreeName,
                     description: data?.aboutDescription,
-                    institutions: data?.institutions,
-                    platforms: data?.platforms
+                    institutions: JSON.parse(data?.institutions),
+                    platforms: JSON.parse(data?.platforms)
                 },
                 email: data.email,
                 password: await hashPassword(data.password),
